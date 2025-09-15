@@ -1,0 +1,40 @@
+{
+  "name": "partflow",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "@btielen/pdf-lib-fontkit": "^1.0.0",
+    "axios": "^1.11.0",
+    "bootstrap": "^5.3.7",
+    "bootstrap-vue": "^2.23.1",
+    "core-js": "^3.8.3",
+    "excel-date-to-js": "^1.1.5",
+    "fabric": "^6.7.1",
+    "fontkit": "^2.0.4",
+    "moment": "^2.30.1",
+    "pdf-lib": "^1.17.1",
+    "pdfmake": "^0.2.20",
+    "vue": "^2.6.14",
+    "vue-moment": "^4.1.0",
+    "vue-router": "^3.5.1",
+    "vuex": "^3.6.2",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.16",
+    "@babel/eslint-parser": "^7.12.16",
+    "@vue/cli-plugin-babel": "~5.0.0",
+    "@vue/cli-plugin-router": "~5.0.0",
+    "@vue/cli-plugin-vuex": "~5.0.0",
+    "@vue/cli-service": "~5.0.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "prettier": "^2.4.1",
+    "vue-template-compiler": "^2.6.14"
+  }
+}
