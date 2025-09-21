@@ -354,6 +354,7 @@ export default {
         payload.currentRole = 'B';
         payload.completedRoles = ['A']; // เก็บว่า A เสร็จแล้ว
         payload.roleAAnswered = [...this.answeredParts]; // เก็บข้อที่ตอบใน Role A
+        sessionStorage.setItem("checkProcess", JSON.stringify(this.$store.state.selection.process))
         sessionStorage.setItem("checkPayload", JSON.stringify(payload));
         
         // กลับไป LayoutPage แต่จะเป็น role B  
@@ -364,6 +365,7 @@ export default {
         const payload = JSON.parse(sessionStorage.getItem("checkPayload") || '{}');
         payload.currentRole = 'B';
         payload.completedRoles = ['A'];
+        sessionStorage.setItem("checkProcess", JSON.stringify(this.$store.state.selection.process))
         sessionStorage.setItem("checkPayload", JSON.stringify(payload));
         this.$router.push({ name: 'SelectProcess' });
       }

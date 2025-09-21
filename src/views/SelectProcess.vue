@@ -1,16 +1,6 @@
 <!-- src/views/SelectProcess.vue -->
 <template>
   <div class="container py-4 select-process-page" style="border-color: black;border-style: solid;">
-    <!-- Allbox status -->
-    <!-- <div class="text-center mb-3">
-      <span :class="{
-        'text-danger': connectState === 'connecting' || connectState === 'error',
-        'text-success': connectState === 'ok'
-      }" class="h4">
-        {{ connectMessage }}
-      </span>
-    </div> -->
-
     <!-- Dropdown: Select Process -->
     <b-form-group label="" label-size="lg" label-class="floating-label" class="mb-3">
       <b-form-select v-model="selectedProcess" :disabled="loadingProcesses" class="big-control">
@@ -22,7 +12,7 @@
         </template>
 
         <!-- วนลูปสร้าง option -->
-        <b-form-select-option v-for="p in processes" :key="p.stationid" :value="p">
+        <b-form-select-option v-for="p in processes" :key="p.station_id" :value="p">
           {{ p.name }}
         </b-form-select-option>
       </b-form-select>
@@ -43,36 +33,32 @@
       </div>
     </div>
 
+    <!-- Debug info (ลบออกได้เมื่อทำงานถูกต้องแล้ว) -->
+    <!-- <div class="mt-3 p-2 bg-light" style="font-size: 12px;">
+      <div>Selected Process: {{ selectedProcess ? selectedProcess.name : 'ไม่ได้เลือก' }}</div>
+      <div>Station ID: {{ selectedProcess ? selectedProcess.station_id : '-' }}</div>
+      <div>Seq: {{ seq }}</div>
+    </div> -->
   </div>
 </template>
 
 <script>
 import api from '@/api/api';
+
 export default {
   name: 'SelectProcess',
   data() {
     return {
-      // Allbox status
-      connectState: 'connecting', // 'connecting' | 'ok' | 'error'
       // Process dropdown
-      loadingProcesses: true,
+      loadingProcesses: false,
       processes: [],         // เก็บข้อมูลจาก /allworkstation
       selectedProcess: null, // จะได้ทั้ง object
-      loadingProcesses: false,
       // Seq input
       seq: '',
       maxSeqLength: 12
     }
   },
   computed: {
-    connectMessage() {
-      if (this.connectState === 'connecting') return 'กำลังเชื่อมต่อ API Allbox...'
-      if (this.connectState === 'ok') return 'เชื่อมต่อ API Allbox สำเร็จ'
-      return 'เชื่อมต่อ API Allbox ล้มเหลว'
-    },
-    processOptions() {
-      return this.processes.map(p => ({ value: p.id, text: p.name }))
-    },
     keypadRows() {
       // จัด layout ปุ่มให้เหมือนภาพ
       const rows = [
@@ -85,14 +71,6 @@ export default {
     }
   },
   methods: {
-    async pingAllbox() {
-      try {
-        await axios.get('/api/allbox/ping') // ปรับเป็น endpoint จริงของคุณ
-        this.connectState = 'ok'
-      } catch (e) {
-        this.connectState = 'error'
-      }
-    },
     async loadProcesses() {
       this.loadingProcesses = true
       try {
@@ -104,10 +82,60 @@ export default {
             lot_size: x.lot_size
           }))
           : []
+        
+        console.log('Loaded processes:', this.processes)
       } finally {
         this.loadingProcesses = false
       }
     },
+
+    // แก้ไข method นี้ให้หา process object ที่ตรงกับ station_id
+    setProcessFromSessionStorage() {
+      const payload = sessionStorage.getItem("checkPayload");
+      if (payload) {
+        try {
+          const data = JSON.parse(payload);
+          
+          // ดึงข้อมูลจาก payload
+          if (data.parts && data.parts.length > 0) {
+            this.seq = String(Number(data.parts[5].sequence_no) + 1);
+            console.log("Set seq from parts:", this.seq);
+          }
+          
+          console.log("Payload data:", data);
+        } catch (error) {
+          console.error('Error parsing payload:', error);
+        }
+      }
+
+      // ตรวจสอบ station_id จาก checkProcess
+      const station = sessionStorage.getItem("checkProcess");
+      if (station) {
+        try {
+          const stationData = JSON.parse(station);
+          const targetStationId = stationData.station_id;
+          
+          console.log("Looking for station_id:", targetStationId);
+          console.log("Available processes:", this.processes);
+          
+          // หา process object ที่มี station_id ตรงกัน
+          const foundProcess = this.processes.find(p => 
+            Number(p.station_id) === Number(targetStationId)
+          );
+          
+          if (foundProcess) {
+            this.selectedProcess = foundProcess;
+            console.log("Found and selected process:", foundProcess);
+          } else {
+            console.log("Process not found for station_id:", targetStationId);
+          }
+          
+        } catch (error) {
+          console.error('Error parsing station data:', error);
+        }
+      }
+    },
+
     onPress(btn) {
       const t = btn.text
       if (t === 'Del') {
@@ -115,65 +143,47 @@ export default {
         return
       }
       if (t === 'Go') {
-        console.log('select and seq ============', this.selectedProcess.station_id + this.seq + this.selectedProcess.lot_size)
-        // ใน SelectProcess.vue
-        this.$store.commit('setProcess', this.selectedProcess) // {station_id, name, lot_size, ...}
+        if (!this.selectedProcess || !this.seq) {
+          alert('กรุณาเลือก Process และใส่ Sequence Number')
+          return
+        }
+        
+        console.log('Go pressed:', {
+          station_id: this.selectedProcess.station_id,
+          seq: this.seq,
+          lot_size: this.selectedProcess.lot_size
+        });
+        
+        // บันทึกลง store
+        this.$store.commit('setProcess', this.selectedProcess)
         this.$store.commit('setSeq', this.seq)
+        
+        // ไปหน้าถัดไป
         this.$router.push({ name: 'LayoutPage' })
-        // let selectBox = {
-        //   station_id: this.selectedProcess.station_id
-        // }
-        // api.post('/allboxstationCanva2', selectBox).then(response => {
-        //   console.log('show allbox', response.data.result)
-        // }).catch(error => {
-        //   console.error('Error fetching data:', error.message);
-        // })
-        // let selectSeq = {
-        //   sequence_no: this.seq,
-        //   lot_size: this.selectedProcess.lot_size
-        // }
-        // api.post('/allseq', selectSeq).then(response => {
-        //   console.log('show allbox', response.data.result)
-        // }).catch(error => {
-        //   console.error('Error fetching data:', error.message);
-        // })
-        // if (!this.selectedProcessId || !this.seq) return
-        // ไปหน้าถัดไป: Layout + Part
-        // this.$router.push({
-        //   name: 'LayoutPage',
-        //   query: { processId: this.selectedProcessId, seq: this.seq }
-        // })
         return
       }
+      
       // number
       if (this.seq.length < this.maxSeqLength) {
         this.seq += t
       }
     },
+
     getBoxStation() {
-      ///allboxstationCanva
-      // api.get('/allworkstation').then(response => {
-      //   console.log('show allbox', response.data.result)
-      // }).catch(error => {
-      //   console.error('Error fetching data:', error.message);
-      // })
+      // placeholder method
     }
   },
-  async mounted() {
-    const payload = sessionStorage.getItem("checkPayload");
-    if (payload) {
-      const data = JSON.parse(payload);
 
-      this.parts = data.parts || [];
-      this.sa = data.sa || [];
-      this.sb = data.sb || [];
-      console.log("parts:", this.parts[5].sequence_no);
-      console.log("sa config:", this.sa);
-      console.log("sb config:", this.sb);
-      this.seq = Number(this.parts[5].sequence_no) + 1
-    }
-    // await this.pingAllbox()
+  async mounted() {
+    // โหลด processes ก่อน
     await this.loadProcesses()
+    
+    // จากนั้นค่อยเซ็ต selected process
+    // ใช้ nextTick เพื่อให้ processes โหลดเสร็จก่อน
+    this.$nextTick(() => {
+      this.setProcessFromSessionStorage()
+    })
+    
     await this.getBoxStation()
   }
 }
@@ -184,12 +194,10 @@ select,
 input {
   width: 100%;
   box-sizing: border-box;
-  /* ให้รวม padding/border ใน width */
 }
 
 .form-group {
-  width: 100%
-    /* หรือใช้ % ตาม layout */
+  width: 100%;
 }
 
 .form-group select,
@@ -198,16 +206,13 @@ input {
   box-sizing: border-box;
 }
 
-/* โทนใกล้ภาพ: ขอบม่วง, ตัวอักษรใหญ่, ปุ่ม pill */
 .select-process-page {
   max-width: 980px;
 }
 
-
 .floating-label {
   font-weight: 600;
   color: #5b3aa2;
-  /* ม่วงอมน้ำเงิน */
 }
 
 .big-control {

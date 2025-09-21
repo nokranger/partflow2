@@ -256,12 +256,27 @@ export default {
       return
     }
 
+    // เช็คการเข้าถึงหน้าก่อน
+    if (!(await this.validatePageAccess())) {
+      return;
+    }
+
     // โหลดข้อมูลทั้งหมด
     await Promise.all([
       this.fetchLayout(),
       this.fetchSetting(),
-      this.fetchParts()
-    ])
+      this.fetchParts() // fetchParts จะเช็ค lotsize เองแล้ว
+    ]);
+  },
+
+  // เพิ่ม method สำหรับ debug (สามารถลบได้)
+  debugInfo() {
+    return {
+      expectedLotSize: Number(this.params.lotsize),
+      actualPartsCount: this.parts.length,
+      partsSequences: this.parts.map(p => p.sequence_no),
+      storeData: this.$store.state.selection
+    };
   },
 
   methods: {
@@ -296,24 +311,89 @@ export default {
         this.load.setting = false
       }
     },
+    // เพิ่ม method สำหรับเช็ค lotsize
+    validateLotSize() {
+      const expectedLotSize = Number(this.params.lotsize);
+      const actualPartsCount = this.parts.length;
+
+      console.log('Expected lotsize:', expectedLotSize);
+      console.log('Actual parts count:', actualPartsCount);
+      console.log('Parts data:', this.parts);
+
+      // เช็คว่า parts ที่ได้มามีจำนวนครบตาม lotsize หรือไม่
+      if (actualPartsCount < expectedLotSize) {
+        console.warn(`Parts count (${actualPartsCount}) is less than expected lotsize (${expectedLotSize})`);
+
+        // แสดง alert แจ้งเตือน
+        alert(`จำนวน Lot size ไม่ครบ!\nต้องการ: ${expectedLotSize} parts\nได้รับ: ${actualPartsCount} parts\nกรุณาเลือก Process ใหม่`);
+
+        // กลับไปหน้า SelectProcess
+        this.$router.replace({ name: 'SelectProcess' });
+        return false;
+      }
+
+      // เช็คว่ามี parts ที่จำเป็นหรือไม่
+      if (actualPartsCount === 0) {
+        console.warn('No parts found');
+        alert('ไม่พบข้อมูล Parts\nกรุณาเลือก Process และ Sequence Number ใหม่');
+        this.$router.replace({ name: 'SelectProcess' });
+        return false;
+      }
+
+      return true;
+    },
+    async validatePageAccess() {
+      // เช็ค params พื้นฐาน
+      if (!this.params.station_id || !this.params.seq) {
+        console.warn('Missing station_id or seq');
+        this.$router.replace({ name: 'SelectProcess' });
+        return false;
+      }
+
+      // เช็ค lotsize ว่าเป็นตัวเลขที่ถูกต้อง
+      const lotsize = Number(this.params.lotsize);
+      if (!lotsize || lotsize <= 0) {
+        console.warn('Invalid lotsize:', this.params.lotsize);
+        alert('Lot Size ไม่ถูกต้อง\nกรุณาเลือก Process ใหม่');
+        this.$router.replace({ name: 'SelectProcess' });
+        return false;
+      }
+
+      return true;
+    },
 
     // โหลด parts data
     async fetchParts() {
-      this.load.parts = true
+      this.load.parts = true;
       try {
         const { data } = await api.post('/allseq', {
           sequence_no: Number(this.params.seq),
           lot_size: Number(this.params.lotsize)
-        })
-        this.parts = Array.isArray(data?.result) ? data.result : []
-        this.currentIndex = 0
+        });
+
+        this.parts = Array.isArray(data?.result) ? data.result : [];
+        this.currentIndex = 0;
+
+        console.log('Fetched parts:', this.parts.length, 'items');
+
+        // เช็ค lotsize หลังจากโหลดข้อมูลเสร็จ
+        if (!this.validateLotSize()) {
+          return; // ถ้าไม่ผ่านการเช็ค จะ redirect แล้ว
+        }
+
       } catch (e) {
-        this.parts = []
-        this.currentIndex = 0
-        this.errorMsg = 'โหลด Part (allseq) ไม่สำเร็จ: ' + (e?.message || '')
-        console.error('fetchParts error', e)
+        this.parts = [];
+        this.currentIndex = 0;
+        this.errorMsg = 'โหลด Part (allseq) ไม่สำเร็จ: ' + (e?.message || '');
+        console.error('fetchParts error', e);
+
+        // ถ้า error ก็ให้กลับไปหน้า select
+        setTimeout(() => {
+          this.$router.replace({ name: 'SelectProcess' });
+        }, 3000);
+
       } finally {
-        this.load.parts = false
+        this.load.parts = false;
       }
     },
 
@@ -376,7 +456,7 @@ export default {
         sa: saData,
         sb: sbData
       }
-
+      sessionStorage.setItem("checkProcess", JSON.stringify(this.$store.state.selection.process))
       sessionStorage.setItem("checkPayload", JSON.stringify(payload))
       this.$router.push({ name: "AnswerCheckPage" })
     },

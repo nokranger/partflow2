@@ -367,6 +367,7 @@ export default {
         currentRole: 'B' // ระบุว่าเป็น role B
       }
 
+      sessionStorage.setItem("checkProcess", JSON.stringify(this.$store.state.selection.process))
       sessionStorage.setItem("checkPayload", JSON.stringify(payload))
       this.$router.push({ name: "AnswerCheckPageB" })
     },
