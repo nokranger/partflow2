@@ -207,7 +207,8 @@ input {
 }
 
 .select-process-page {
-  max-width: 980px;
+  max-width: 100%;
+  max-height: 100%;
 }
 
 .floating-label {
@@ -216,8 +217,8 @@ input {
 }
 
 .big-control {
-  height: 56px;
-  font-size: 28px;
+  height: 72px;
+  font-size: 56px;
   border: 2px solid #7a56d8 !important;
   border-radius: 10px;
   box-shadow: none;
@@ -234,7 +235,7 @@ input {
 .pad-btn {
   min-width: 110px;
   min-height: 66px;
-  font-size: 32px;
+  font-size: 56px;
   border-radius: 28px;
   border: 1px solid #e7e3f5;
   box-shadow: 0 4px 10px rgba(64, 36, 144, 0.08);

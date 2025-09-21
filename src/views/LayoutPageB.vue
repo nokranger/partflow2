@@ -9,7 +9,7 @@
       <div class="col-md-6 mb-4">
         <h5 class="text-center">Layout location</h5>
         <div v-if="load.layout" class="text-center text-muted py-5">Loading...</div>
-        <GridBoxes v-else :boxes="boxes" :baseWidth="860" :baseHeight="520" :allowUpscale="false"
+        <GridBoxes v-else :boxes="boxes" :baseWidth="860" :baseHeight="660" :allowUpscale="false"
           :highlightRhIds="highlightRhIds" :highlightLhIds="highlightLhIds" />
       </div>
 
@@ -420,21 +420,59 @@ export default {
 </script>
 
 <style scoped>
+/* === TABLET OPTIMIZED STYLES === */
+
+/* Container adjustments */
+.container {
+  max-width: 100%;
+  padding: 15px;
+}
+
+/* Header styling */
+h3 {
+  font-size: 28px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+h5 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 15px;
+}
+
+/* Part info sections */
+.row.mb-3 .col div {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.4;
+  margin-bottom: 8px;
+}
+
+.small.text-muted {
+  font-size: 14px !important;
+}
+
+/* Part images container */
 .part-images {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 20px;
   align-items: start;
+  margin: 25px 0;
 }
 
 .part-img-box {
   width: 100%;
   aspect-ratio: 4 / 3;
-  border: 1px solid #e1e3e8;
-  border-radius: 10px;
+  border: 2px solid #e1e3e8;
+  border-radius: 12px;
   background: #fafafa;
   overflow: hidden;
   box-sizing: border-box;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
 .part-img {
@@ -454,11 +492,149 @@ export default {
   color: #444;
   border-radius: 10px;
   font-weight: 600;
+  font-size: 18px;
 }
 
-@media (max-width: 992px) {
+/* Button styling */
+.btn {
+  font-size: 18px !important;
+  font-weight: 600 !important;
+  padding: 12px 24px !important;
+  border-radius: 10px !important;
+  min-height: 50px;
+  border-width: 2px !important;
+  transition: all 0.3s ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%) !important;
+}
+
+.btn-outline-primary {
+  border-color: #007bff !important;
+  color: #007bff !important;
+  background: transparent !important;
+}
+
+.btn-outline-primary:hover {
+  background: #007bff !important;
+  color: white !important;
+}
+
+/* Button container */
+.d-flex.justify-content-center {
+  gap: 15px;
+  margin: 25px 0;
+  flex-wrap: wrap;
+}
+
+/* Loading states */
+.text-center.text-muted.py-5 {
+  font-size: 18px;
+  font-weight: 500;
+}
+
+/* Error messages */
+.alert {
+  font-size: 16px;
+  font-weight: 500;
+  border-radius: 10px;
+  border-width: 2px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
   .part-images {
     grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  h3 {
+    font-size: 24px;
+  }
+  
+  h5 {
+    font-size: 18px;
+  }
+  
+  .row.mb-3 .col div {
+    font-size: 15px;
+  }
+  
+  .btn {
+    font-size: 16px !important;
+    padding: 10px 20px !important;
+    min-height: 45px;
+  }
+}
+
+/* High DPI / Retina screens */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .part-img-box {
+    border-width: 1px;
+  }
+  
+  .btn {
+    border-width: 1px !important;
+  }
+}
+
+/* Large tablet landscape */
+@media (min-width: 1200px) {
+  h3 {
+    font-size: 32px;
+  }
+  
+  h5 {
+    font-size: 22px;
+  }
+  
+  .row.mb-3 .col div {
+    font-size: 18px;
+  }
+  
+  .btn {
+    font-size: 20px !important;
+    padding: 14px 28px !important;
+    min-height: 55px;
+  }
+  
+  .part-img-fallback {
+    font-size: 20px;
+  }
+}
+
+/* Specific adjustments for tablet in landscape with browser tabs */
+@media (max-height: 900px) and (min-width: 1024px) {
+  .container {
+    padding: 10px;
+  }
+  
+  h3 {
+    font-size: 26px;
+    margin-bottom: 15px;
+  }
+  
+  h5 {
+    font-size: 19px;
+    margin-bottom: 12px;
+  }
+  
+  .part-images {
+    margin: 20px 0;
+  }
+  
+  .d-flex.justify-content-center {
+    margin: 20px 0;
   }
 }
 </style>
