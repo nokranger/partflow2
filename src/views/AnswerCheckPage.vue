@@ -3,8 +3,8 @@
     <b-row>
       <!-- ฝั่งซ้าย: รายการคำถาม -->
       <b-col cols="6">
-        <h5>Part</h5>
-        <div 
+        <h5 style="font-size: 28px;">Part</h5>
+        <div
           v-for="(part, index) in parts" 
           :key="part.sequence_no || index" 
           class="answer-item"
@@ -14,14 +14,15 @@
           }"
         >
           <p>{{ formatLine(part) }}</p>
-          <p v-if="!answeredParts.includes(index)" class="not-answered">ยังไม่ได้ตอบ</p>
-          <p v-else class="answered">✓ ตอบถูกแล้ว</p>
+          <!-- <p v-if="!answeredParts.includes(index)" class="not-answered">ยังไม่ได้ตอบ</p> -->
+          <!-- <p v-else class="answered">✓ ตอบถูกแล้ว</p> -->
+           <br>
         </div>
       </b-col>
 
       <!-- ฝั่งขวา: คำตอบ -->
       <b-col cols="6">
-        <h5>Answer</h5>
+        <h5 style="font-size: 28px;">Answer</h5>
         
         <!-- แสดงคำตอบเฉพาะเมื่อยังไม่ตอบครบ -->
         <div v-if="!gameCompleted">
@@ -312,7 +313,7 @@ export default {
 
 .answer-item {
   background: #f9f9fb;
-  padding: 12px 16px;
+  padding: 20px 24px;
   border-radius: 8px;
   margin-bottom: 12px;
   transition: all 0.3s ease;
@@ -321,7 +322,6 @@ export default {
 .answer-item.current-question {
   background: #e3f2fd;
   border: 2px solid #2196f3;
-  box-shadow: 0 2px 8px rgba(33, 150, 243, 0.3);
 }
 
 .answer-item.answered-correct {
@@ -331,18 +331,18 @@ export default {
 
 .answer-item p {
   margin: 4px 0;
-  font-size: 15px;
+  font-size: 24px;
   color: #333;
 }
 
 .not-answered {
   color: #e74c3c;
-  font-size: 14px;
+  font-size: 28px;
 }
 
 .answered {
   color: #27ae60;
-  font-size: 14px;
+  font-size: 28px;
   font-weight: bold;
 }
 
@@ -425,7 +425,7 @@ export default {
   padding: 10px;
   background: #f8f9fa;
   border-radius: 6px;
-  font-size: 13px;
+  font-size: 28px;
   color: #666;
 }
 
@@ -441,6 +441,7 @@ export default {
 .next-page-btn {
   min-width: 150px;
   transition: all 0.3s ease;
+  font-size: 28px;
 }
 
 .next-page-btn:disabled {
