@@ -43,7 +43,7 @@
                   :alt="`${sb[0].submsg}-${topPairData.part[sb[0].partName]}`" 
                   @error="onImgError"
                 />
-                <div class="caption">{{ sb[0].submsg }}</div>
+                <!-- <div class="caption">{{ sb[0].submsg }}</div> -->
               </div>
               <div class="answer-box">
                 <img 
@@ -51,7 +51,7 @@
                   :alt="`${sb[1].submsg}-${topPairData.part[sb[1].partName]}`" 
                   @error="onImgError"
                 />
-                <div class="caption">{{ sb[1].submsg }}</div>
+                <!-- <div class="caption">{{ sb[1].submsg }}</div> -->
               </div>
             </div>
           </div>
@@ -73,7 +73,7 @@
                   :alt="`${sb[0].submsg}-${bottomPairData.part[sb[0].partName]}`" 
                   @error="onImgError"
                 />
-                <div class="caption">{{ sb[0].submsg }}</div>
+                <!-- <div class="caption">{{ sb[0].submsg }}</div> -->
               </div>
               <div class="answer-box">
                 <img 
@@ -81,7 +81,7 @@
                   :alt="`${sb[1].submsg}-${bottomPairData.part[sb[1].partName]}`" 
                   @error="onImgError"
                 />
-                <div class="caption">{{ sb[1].submsg }}</div>
+                <!-- <div class="caption">{{ sb[1].submsg }}</div> -->
               </div>
             </div>
           </div>
@@ -89,10 +89,10 @@
 
         <!-- ข้อมูล Debug และปุ่ม Next Page -->
         <div class="bottom-section">
-          <div class="debug-info">
+          <!-- <div class="debug-info">
             <p>ข้อปัจจุบัน: {{ currentIndex + 1 }} / {{ parts.length }}</p>
             <p>ตอบถูกแล้ว: {{ answeredParts.length }} ข้อ</p>
-          </div>
+          </div> -->
           
           <!-- ปุ่ม Next Page -->
           <div class="next-page-section">
@@ -511,9 +511,9 @@ export default {
 }
 
 .answer-box img {
-  max-width: 200px;
+  max-width: 400px;
   width: 100%;
-  height: auto;
+  height: 190px;
   display: block;
   margin: 0 auto 8px;
   border-radius: 4px;
