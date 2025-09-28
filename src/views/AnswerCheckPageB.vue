@@ -13,10 +13,10 @@
             'answered-correct': answeredParts.includes(index)
           }"
         >
-          <p>{{ formatLine(part) }}</p>
+          <p style="font-size: 32px;">{{ formatLine(part) }}</p>
           <!-- <p v-if="!answeredParts.includes(index)" class="not-answered">ยังไม่ได้ตอบ</p> -->
           <!-- <p v-else class="answered">✓ ตอบถูกแล้ว</p> -->
-           <br>
+           <!-- <br> -->
         </div>
       </b-col>
 
@@ -170,7 +170,7 @@ export default {
       const list = Array.isArray(this.sb) ? this.sb : [];
       const pieces = list.map(cfg => {
         const val = part?.[cfg.partName] ?? '-';
-        return `${cfg.submsg} - ${val}`;
+        return ` ${val}`;
       });
       const joined = pieces.join(' และ ');
       const seq = part?.sequence_no ? `${part.sequence_no} : ` : '';
@@ -491,8 +491,8 @@ export default {
 }
 
 .answer-pair.wrong-answer {
-  border-color: #dc3545;
-  background: #f8d7da;
+  border-color: red;
+  background: red;
   box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
   animation: shake 0.5s ease-in-out;
 }

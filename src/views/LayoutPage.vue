@@ -1,13 +1,13 @@
 <template>
   <div class="container py-3">
     <div class="text-center mb-3">
-      <h3>Select Process NO: {{ headerSeq }}</h3>
+      <h3 style="font-size: 30px;font-weight: bold;">Select Process NO: {{ headerSeq }}</h3>
     </div>
 
     <div class="row">
       <!-- ฝั่งซ้าย: Layout -->
       <div class="col-md-6 mb-4">
-        <h5 class="text-center">Layout location</h5>
+        <h5 class="text-center" style="font-size: 30px;font-weight: bold;">Layout location</h5>
         <div v-if="load.layout" class="text-center text-muted py-5">Loading...</div>
         <GridBoxes v-else :boxes="boxes" :baseWidth="860" :baseHeight="660" :allowUpscale="false"
           :highlightRhIds="highlightRhIds" :highlightLhIds="highlightLhIds" />
@@ -23,14 +23,15 @@
           <!-- หัวข้อ LH/RH ตาม setting.sa -->
           <div class="row mb-3">
             <div class="col text-left" style="color:#ff9800">
-              <div>LH : Submsg: {{ headerLH.submsg }}</div>
-              <div>Part Name: {{ headerLH.partName }}</div>
-              <div class="small text-muted">Priority: {{ currentPartPriority || 'N/A' }}</div>
+              <div style="font-size: 30px;font-weight: bold;">RH</div>
+              <div style="font-size: 30px;font-weight: bold;">{{ headerLH.partName }}</div>
+              <!-- <div class="small text-muted">Priority: {{ currentPartPriority || 'N/A' }}</div> -->
             </div>
             <div class="col text-success">
-              <div>RH : Submsg: {{ headerRH.submsg }}</div>
-              <div>Part Name: {{ headerRH.partName }}</div>
-              <div class="small text-muted">Index: {{ currentIndex + 1 }}/{{ orderedParts.length }}</div>
+              <div style="font-size: 30px;font-weight: bold;">LH</div>
+              <!-- <div>{{ headerRH.submsg }}</div> -->
+              <div style="font-size: 30px;font-weight: bold;">{{ headerRH.partName }}</div>
+              <!-- <div class="small text-muted">Index: {{ currentIndex + 1 }}/{{ orderedParts.length }}</div> -->
             </div>
           </div>
 
@@ -39,7 +40,7 @@
             <div class="part-img-box">
               <img v-if="imgLH && !imgErrLH" :src="imgLH" alt="LH" class="part-img" @error="imgErrLH = true" />
               <div v-else class="part-img-fallback">
-                LH: {{ headerLH.submsg }}
+                 {{ headerLH.partName  }}
               </div>
             </div>
 
@@ -47,7 +48,7 @@
             <div class="part-img-box">
               <img v-if="imgRH && !imgErrRH" :src="imgRH" alt="RH" class="part-img" @error="imgErrRH = true" />
               <div v-else class="part-img-fallback">
-                RH: {{ headerRH.submsg }}
+                 {{ headerRH.partName  }}
               </div>
             </div>
           </div>

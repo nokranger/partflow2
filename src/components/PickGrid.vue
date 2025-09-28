@@ -2,16 +2,16 @@
   <div class="pickgrid" :style="{ '--cols': lotSize }" v-if="lotSize > 0">
     <!-- RH (แถวบน) -->
     <div v-for="c in lotSize" :key="'top-' + c" class="cell" :class="{ 'active-rh': c - 1 === activeIndex }">
-      <span v-if="c - 1 === activeIndex">RH</span>
+      <span v-if="c - 1 === activeIndex" style="font-size: 30px;">LH</span>
     </div>
 
     <!-- LH (แถวล่าง) -->
     <div v-for="c in lotSize" :key="'bot-' + c" class="cell" :class="{ 'active-lh': c - 1 === activeIndex }">
-      <span v-if="c - 1 === activeIndex">LH</span>
+      <span v-if="c - 1 === activeIndex" style="font-size: 30px;">RH</span>
     </div>
 
     <!-- ดัชนีล่าง -->
-    <div v-for="c in lotSize" :key="'idx-' + c" class="cell index">
+    <div v-for="c in lotSize" :key="'idx-' + c" class="cell index" style="font-size: 30px;">
       {{ c }}
     </div>
   </div>

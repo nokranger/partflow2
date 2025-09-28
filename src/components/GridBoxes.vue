@@ -11,9 +11,9 @@
         'is-rh': isRhHighlighted(b.boxid),
         'is-lh': isLhHighlighted(b.boxid)
       }" :style="styleFor(b)" :title="`${b.submsg} - ${b.conversion_char}`">
-        <span v-if="isRhHighlighted(b.boxid)" class="badge rh">RH</span>
-        <span v-if="isLhHighlighted(b.boxid)" class="badge lh">LH</span>
-        {{ b.submsg }}
+        <span v-if="isRhHighlighted(b.boxid)" class="badge rh">LH</span>
+        <span v-if="isLhHighlighted(b.boxid)" class="badge lh">RH</span>
+        <!-- {{ b.submsg }} -->
       </div>
     </div>
   </div>
