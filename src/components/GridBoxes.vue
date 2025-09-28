@@ -105,7 +105,7 @@ export default {
   justify-content: center;
   border-radius: 10px;
   background: #fff;
-  border: 1px solid #e5e7eb;
+  border: 1px solid #454647;
   color: #555;
   font-size: 12px;
   text-align: center;
@@ -116,18 +116,17 @@ export default {
 
 /* RH = ส้ม */
 .grid-box.is-rh {
-  outline: 3px solid #2ecc71;
-  box-shadow: 0 0 0 6px rgba(46, 204, 113, .25);
-  background: #fffaf2;
+  outline: 3px solid black;
+
+  background: #d1d0cf;
   z-index: 2;
 }
 
 /* LH = เขียว */
 .grid-box.is-lh {
-  outline: 3px solid #2ecc71;
-  outline: 3px solid #ff9800;
-  box-shadow: 0 0 0 6px rgba(255, 152, 0, .25);
-  background: #f4fff7;
+  outline: 3px solid black;
+  outline: 3px solid black;
+  background: #d1d0cf;
   z-index: 2;
 }
 
@@ -144,11 +143,11 @@ export default {
 }
 
 .badge.rh {
-  background: #2ecc71;
+  background: black;
 }
 
 .badge.lh {
 
-  background: #ff9800;
+  background: black;
 }
 </style>

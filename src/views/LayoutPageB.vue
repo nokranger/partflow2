@@ -22,12 +22,12 @@
         <template v-else>
           <!-- หัวข้อ LH/RH ตาม setting.sb -->
           <div class="row mb-3">
-            <div class="col text-left" style="color:#ff9800">
+            <div class="col text-left" style="color:Black;">
               <div style="font-size: 30px;font-weight: bold;">RH</div>
               <div style="font-size: 30px;font-weight: bold;">{{ headerLH.partName }}</div>
               <!-- <div class="small text-muted">Priority: {{ currentPartPriority || 'N/A' }}</div> -->
             </div>
-            <div class="col text-success">
+            <div class="col " style="color:Black;">
               <div style="font-size: 30px;font-weight: bold;">LH</div>
               <div style="font-size: 30px;font-weight: bold;">{{ headerRH.partName }}</div>
               <!-- <div class="small text-muted">Index: {{ currentIndex + 1 }}/{{ orderedParts.length }}</div> -->

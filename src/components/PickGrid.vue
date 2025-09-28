@@ -35,7 +35,7 @@ export default {
   display: grid;
   grid-template-columns: repeat(var(--cols), 1fr);
   grid-auto-rows: 56px;
-  border: 2px solid #222;
+  border: 3px solid #6d6969;
   border-radius: 6px;
   overflow: hidden;
 }
@@ -45,8 +45,8 @@ export default {
   align-items: center;
   justify-content: center;
   background: #fff;
-  border-right: 2px solid #222;
-  border-bottom: 2px solid #222;
+  border-right: 2px solid #6d6969;
+  border-bottom: 2px solid #6d6969;
   font-weight: 600;
 }
 
@@ -63,12 +63,12 @@ export default {
 
 /* สี RH / LH */
 .cell.active-rh {
-  background: #2ecc71;
+  background: black;
   color: #fff;
 }
 
 .cell.active-lh {
-  background: #ff9800;
+  background: black;
   color: #fff;
 }
 </style>
