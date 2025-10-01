@@ -4,53 +4,38 @@
       <!-- ฝั่งซ้าย: รายการคำถาม -->
       <b-col cols="6">
         <h5 style="font-size: 28px;">Part</h5>
-        <div
-          v-for="(part, index) in parts" 
-          :key="part.sequence_no || index" 
-          class="answer-item"
-          :class="{
-            'current-question': index === currentIndex,
-            'answered-correct': answeredParts.includes(index)
-          }"
-        >
+        <div v-for="(part, index) in parts" :key="part.sequence_no || index" class="answer-item" :class="{
+          'current-question': index === currentIndex,
+          'answered-correct': answeredParts.includes(index)
+        }">
           <p style="font-size: 32px;">{{ formatLine(part) }}</p>
           <!-- <p v-if="!answeredParts.includes(index)" class="not-answered">ยังไม่ได้ตอบ</p> -->
           <!-- <p v-else class="answered">✓ ตอบถูกแล้ว</p> -->
-           <!-- <br> -->
+          <!-- <br> -->
         </div>
       </b-col>
 
       <!-- ฝั่งขวา: คำตอบ -->
       <b-col cols="6">
         <h5 style="font-size: 28px;">Answer</h5>
-        
+
         <!-- แสดงคำตอบเฉพาะเมื่อยังไม่ตอบครบ -->
         <div v-if="!gameCompleted">
           <!-- คู่บน -->
           <div v-if="topPairData" class="answer-section">
             <h6>ตัวเลือก A</h6>
-            <div 
-              class="answer-pair clickable" 
-              @click="checkAnswer('top')"
-              :class="{ 
-                'correct-answer': showCorrectTop,
-                'wrong-answer': showWrongTop 
-              }"
-            >
+            <div class="answer-pair clickable" @click="checkAnswer('top')" :class="{
+              'correct-answer': showCorrectTop,
+              'wrong-answer': showWrongTop
+            }">
               <div class="answer-box">
-                <img 
-                  :src="buildImg(sa[0].submsg, topPairData.part[sa[0].partName])"
-                  :alt="`${sa[0].submsg}-${topPairData.part[sa[0].partName]}`" 
-                  @error="onImgError"
-                />
+                <img :src="buildImg(sa[0].submsg, topPairData.part[sa[0].partName])"
+                  :alt="`${sa[0].submsg}-${topPairData.part[sa[0].partName]}`" @error="onImgError" />
                 <!-- <div class="caption">{{ sa[0].submsg }}</div> -->
               </div>
               <div class="answer-box">
-                <img 
-                  :src="buildImg(sa[1].submsg, topPairData.part[sa[1].partName])"
-                  :alt="`${sa[1].submsg}-${topPairData.part[sa[1].partName]}`" 
-                  @error="onImgError"
-                />
+                <img :src="buildImg(sa[1].submsg, topPairData.part[sa[1].partName])"
+                  :alt="`${sa[1].submsg}-${topPairData.part[sa[1].partName]}`" @error="onImgError" />
                 <!-- <div class="caption">{{ sa[1].submsg }}</div> -->
               </div>
             </div>
@@ -59,28 +44,18 @@
           <!-- คู่ล่าง -->
           <div v-if="bottomPairData" class="answer-section">
             <h6>ตัวเลือก B</h6>
-            <div 
-              class="answer-pair clickable" 
-              @click="checkAnswer('bottom')"
-              :class="{ 
-                'correct-answer': showCorrectBottom,
-                'wrong-answer': showWrongBottom 
-              }"
-            >
+            <div class="answer-pair clickable" @click="checkAnswer('bottom')" :class="{
+              'correct-answer': showCorrectBottom,
+              'wrong-answer': showWrongBottom
+            }">
               <div class="answer-box">
-                <img 
-                  :src="buildImg(sa[0].submsg, bottomPairData.part[sa[0].partName])"
-                  :alt="`${sa[0].submsg}-${bottomPairData.part[sa[0].partName]}`" 
-                  @error="onImgError"
-                />
+                <img :src="buildImg(sa[0].submsg, bottomPairData.part[sa[0].partName])"
+                  :alt="`${sa[0].submsg}-${bottomPairData.part[sa[0].partName]}`" @error="onImgError" />
                 <!-- <div class="caption">{{ sa[0].submsg }}</div> -->
               </div>
               <div class="answer-box">
-                <img 
-                  :src="buildImg(sa[1].submsg, bottomPairData.part[sa[1].partName])"
-                  :alt="`${sa[1].submsg}-${bottomPairData.part[sa[1].partName]}`" 
-                  @error="onImgError"
-                />
+                <img :src="buildImg(sa[1].submsg, bottomPairData.part[sa[1].partName])"
+                  :alt="`${sa[1].submsg}-${bottomPairData.part[sa[1].partName]}`" @error="onImgError" />
                 <!-- <div class="caption">{{ sa[1].submsg }}</div> -->
               </div>
             </div>
@@ -93,16 +68,11 @@
             <p>ข้อปัจจุบัน: {{ currentIndex + 1 }} / {{ parts.length }}</p>
             <p>ตอบถูกแล้ว: {{ answeredParts.length }} ข้อ</p>
           </div> -->
-          
+
           <!-- ปุ่ม Next Page -->
           <div class="next-page-section">
-            <b-button 
-              :variant="gameCompleted ? 'primary' : 'secondary'" 
-              :disabled="!gameCompleted"
-              size="lg" 
-              @click="nextPage"
-              class="next-page-btn"
-            >
+            <b-button :variant="gameCompleted ? 'primary' : 'secondary'" :disabled="!gameCompleted" size="lg"
+              @click="nextPage" class="next-page-btn">
               Next Page
             </b-button>
           </div>
@@ -133,22 +103,22 @@ export default {
       isCorrectAnswerOnTop: true, // สุ่มว่าคำตอบที่ถูกอยู่บนหรือล่าง
     }
   },
-  
+
   computed: {
-    currentPart() { 
-      return this.parts[this.currentIndex] || null 
+    currentPart() {
+      return this.parts[this.currentIndex] || null
     },
-    
+
     topPairData() {
       if (!this.currentPart || !this.randomPart) return null;
-      return this.isCorrectAnswerOnTop 
+      return this.isCorrectAnswerOnTop
         ? { part: this.currentPart, isCorrect: true }
         : { part: this.randomPart, isCorrect: false };
     },
-    
+
     bottomPairData() {
       if (!this.currentPart || !this.randomPart) return null;
-      return this.isCorrectAnswerOnTop 
+      return this.isCorrectAnswerOnTop
         ? { part: this.randomPart, isCorrect: false }
         : { part: this.currentPart, isCorrect: true };
     }
@@ -179,14 +149,14 @@ export default {
 
     getRandomPart() {
       if (!this.parts.length) return null
-      
+
       // หาข้อที่ไม่ใช่ข้อปัจจุบัน
-      const availableParts = this.parts.filter((part, index) => 
+      const availableParts = this.parts.filter((part, index) =>
         index !== this.currentIndex
       );
-      
+
       if (availableParts.length === 0) return null;
-      
+
       const idx = Math.floor(Math.random() * availableParts.length);
       return availableParts[idx];
     },
@@ -197,9 +167,9 @@ export default {
     },
 
     checkAnswer(position) {
-      const isCorrectClick = (position === 'top' && this.isCorrectAnswerOnTop) || 
-                           (position === 'bottom' && !this.isCorrectAnswerOnTop);
-      
+      const isCorrectClick = (position === 'top' && this.isCorrectAnswerOnTop) ||
+        (position === 'bottom' && !this.isCorrectAnswerOnTop);
+
       if (isCorrectClick) {
         // ตอบถูก
         if (position === 'top') {
@@ -207,30 +177,40 @@ export default {
         } else {
           this.showCorrectBottom = true;
         }
-        
+
         this.answeredParts.push(this.currentIndex);
-        
+
         setTimeout(() => {
           this.showCorrectTop = false;
           this.showCorrectBottom = false;
           this.goToNextQuestion();
         }, 1000);
-        
+
       } else {
-        // ตอบผิด
+        // ตอบผิด - แสดง popup
         if (position === 'top') {
           this.showWrongTop = true;
-          setTimeout(() => {
-            this.showWrongTop = false;
-            this.setupNewRound();
-          }, 800);
         } else {
           this.showWrongBottom = true;
-          setTimeout(() => {
-            this.showWrongBottom = false;
-            this.setupNewRound();
-          }, 800);
         }
+
+        // แสดง alert popup
+        this.$bvModal.msgBoxOk('คำตอบที่เลือกผิด กรุณาเลือกคำตอบใหม่', {
+          title: 'คำตอบผิด',
+          size: 'md',
+          buttonSize: 'lg',
+          okVariant: 'danger',
+          okTitle: 'ตกลง',
+          headerClass: 'p-3 bg-danger text-white',
+          footerClass: 'p-2',
+          centered: true,
+          bodyClass: 'text-center py-4'
+        }).then(() => {
+          // หลังจากกด OK แล้ว
+          this.showWrongTop = false;
+          this.showWrongBottom = false;
+          this.setupNewRound();
+        });
       }
     },
 
@@ -243,11 +223,11 @@ export default {
     goToNextQuestion() {
       // หาข้อถัดไปที่ยังไม่ได้ตอบ
       let nextIndex = this.currentIndex + 1;
-      
+
       while (nextIndex < this.parts.length && this.answeredParts.includes(nextIndex)) {
         nextIndex++;
       }
-      
+
       if (nextIndex >= this.parts.length) {
         // ตอบครบทุกข้อแล้ว
         this.gameCompleted = true;
@@ -290,14 +270,14 @@ export default {
     const payload = sessionStorage.getItem("checkPayload");
     if (payload) {
       const data = JSON.parse(payload);
-      
+
       this.parts = data.parts || [];
       this.sa = data.sa || [];
       this.sb = data.sb || [];
-      
+
       // เริ่มต้นเกม
       this.initializeGame();
-      
+
       console.log("parts:", this.parts);
       console.log("sa config:", this.sa);
       console.log("sb config:", this.sb);
@@ -393,9 +373,19 @@ export default {
 }
 
 @keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-5px); }
-  75% { transform: translateX(5px); }
+
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  25% {
+    transform: translateX(-5px);
+  }
+
+  75% {
+    transform: translateX(5px);
+  }
 }
 
 .answer-box {
@@ -470,7 +460,7 @@ export default {
     grid-template-columns: 1fr;
     gap: 12px;
   }
-  
+
   .answer-box img {
     max-width: 150px;
   }
