@@ -147,19 +147,95 @@ export default {
       return seq + joined;
     },
 
-    getRandomPart() {
-      if (!this.parts.length) return null
+getRandomPart() {
+  if (!this.parts.length) return null;
 
-      // หาข้อที่ไม่ใช่ข้อปัจจุบัน
-      const availableParts = this.parts.filter((part, index) =>
-        index !== this.currentIndex
-      );
+  const currentPart = this.parts[this.currentIndex];
+  if (!currentPart) return null;
 
-      if (availableParts.length === 0) return null;
+  // สร้างชุดค่าที่ไม่ต้องการให้ซ้ำ โดยดูจากค่าจริงของ part ปัจจุบัน
+  const excludeValues = new Set();
 
-      const idx = Math.floor(Math.random() * availableParts.length);
-      return availableParts[idx];
-    },
+  // เพิ่มค่าของ part ปัจจุบัน (คำตอบที่ถูก)
+  this.sa.forEach(cfg => {
+    const currentValue = currentPart[cfg.partName];
+    if (currentValue != null && currentValue !== '') { // ป้องกัน null/undefined/empty string
+      excludeValues.add(currentValue);
+    }
+  });
+
+  console.log('Current part values:', Array.from(excludeValues));
+
+  // หา parts ที่มีค่าแตกต่างจาก part ปัจจุบัน (ต้องต่างอย่างน้อย 1 field)
+  const availableParts = this.parts.filter((part, index) => {
+    // ไม่เอาข้อปัจจุบัน
+    if (index === this.currentIndex) return false;
+
+    // เช็คว่ามีค่าซ้ำกับ part ปัจจุบันหรือไม่ — แต่ต้องเช็คแบบ "ต้องต่างอย่างน้อย 1 ค่า"
+    let hasAnyDifferentValue = false;
+
+    for (const cfg of this.sa) {
+      const currentVal = currentPart[cfg.partName];
+      const partVal = part[cfg.partName];
+
+      // ถ้าค่าใน field นี้ต่างกัน → ถือว่า "ต่าง" ได้
+      if (
+        (currentVal != null && currentVal !== '') ||
+        (partVal != null && partVal !== '')
+      ) {
+        if (currentVal !== partVal) {
+          hasAnyDifferentValue = true;
+          break; // แค่ต่างอย่างน้อย 1 ค่าก็พอ
+        }
+      }
+    }
+
+    // ถ้าไม่มีค่าไหนต่างเลย → ไม่เอา
+    return hasAnyDifferentValue;
+  });
+
+  console.log('Available parts for wrong answer:', availableParts.length, '/', this.parts.length);
+
+  if (availableParts.length === 0) {
+    // ถ้าไม่มี part ที่ค่าต่าง → ใช้ fallback: เอา part ที่ไม่ใช่ข้อปัจจุบัน (แต่ต้องมีค่าอย่างน้อย 1 field ต่าง)
+    console.warn('No parts with different values, using fallback');
+    const fallbackParts = this.parts.filter((part, index) =>
+      index !== this.currentIndex
+    );
+
+    // กรองเพิ่มเติม: ต้องมีค่าอย่างน้อย 1 field ต่างจาก currentPart
+    const filteredFallback = fallbackParts.filter(part => {
+      let hasDifferent = false;
+      for (const cfg of this.sa) {
+        const currentVal = currentPart[cfg.partName];
+        const partVal = part[cfg.partName];
+        if (currentVal !== partVal) {
+          hasDifferent = true;
+          break;
+        }
+      }
+      return hasDifferent;
+    });
+
+    if (filteredFallback.length === 0) {
+      console.warn('No fallback parts with any difference. Using first non-current part.');
+      return fallbackParts[0] || null;
+    }
+
+    const idx = Math.floor(Math.random() * filteredFallback.length);
+    return filteredFallback[idx];
+  }
+
+  // สุ่มจาก parts ที่มีค่าต่างจาก part ปัจจุบัน
+  const idx = Math.floor(Math.random() * availableParts.length);
+  const selectedPart = availableParts[idx];
+
+  console.log('Selected wrong answer:', this.sa.map(cfg =>
+    `${cfg.submsg}:${selectedPart[cfg.partName]}`
+  ));
+
+  return selectedPart;
+},
 
     randomizeAnswerPosition() {
       // สุ่มว่าคำตอบที่ถูกจะอยู่บนหรือล่าง
