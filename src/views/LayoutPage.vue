@@ -55,7 +55,7 @@
 
           <!-- ปุ่ม -->
           <div class="d-flex justify-content-center my-3">
-            <button class="btn btn-primary mx-2" @click="prevPart" :disabled="currentIndex === 0">Back</button>
+            <button class="btn btn-primary mx-2" @dblclick="prevPart" :disabled="currentIndex === 0">Back</button>
             <button class="btn btn-outline-primary mx-2" @click="nextPart"
               :disabled="currentIndex >= orderedParts.length - 1">Next</button>
             <b-button class="ml-2" @click="onConfirmCheck">Confirm Check</b-button>
