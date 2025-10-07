@@ -252,7 +252,16 @@ export default {
 
   async mounted() {
     if (!this.params.station_id || !this.params.seq) {
-      this.$router.replace({ name: 'SelectProcess' })
+      this.$router.replace({ name: 'SelectProcess' }).catch(err => {
+        // Ignore the vuex err regarding  navigating to the page they are already on.
+        if (
+          err.name !== 'NavigationDuplicated' &&
+          !err.message.includes('Avoided redundant navigation to current location')
+        ) {
+          // But print any other errors to the console
+          logError(err);
+        }
+      });
       return
     }
 
@@ -371,7 +380,7 @@ export default {
       sessionStorage.setItem("checkPayload", JSON.stringify(payload))
       this.$router.push({ name: "AnswerCheckPageB" })
     },
-    
+
     // สร้าง URL รูปภาพจาก setting.sb (เปลี่ยนจาก buildImgUrlFromSA เป็น buildImgUrlFromSB)
     buildImgUrlFromSB(index) {
       const item = this.sbList[index]
@@ -472,7 +481,7 @@ h5 {
   background: #fafafa;
   overflow: hidden;
   box-sizing: border-box;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .part-img {
@@ -508,7 +517,7 @@ h5 {
 
 .btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 .btn:active {
@@ -557,19 +566,19 @@ h5 {
     grid-template-columns: 1fr;
     gap: 15px;
   }
-  
+
   h3 {
     font-size: 24px;
   }
-  
+
   h5 {
     font-size: 18px;
   }
-  
+
   .row.mb-3 .col div {
     font-size: 15px;
   }
-  
+
   .btn {
     font-size: 16px !important;
     padding: 10px 20px !important;
@@ -578,11 +587,12 @@ h5 {
 }
 
 /* High DPI / Retina screens */
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+@media (-webkit-min-device-pixel-ratio: 2),
+(min-resolution: 192dpi) {
   .part-img-box {
     border-width: 1px;
   }
-  
+
   .btn {
     border-width: 1px !important;
   }
@@ -593,21 +603,21 @@ h5 {
   h3 {
     font-size: 32px;
   }
-  
+
   h5 {
     font-size: 22px;
   }
-  
+
   .row.mb-3 .col div {
     font-size: 18px;
   }
-  
+
   .btn {
     font-size: 20px !important;
     padding: 14px 28px !important;
     min-height: 55px;
   }
-  
+
   .part-img-fallback {
     font-size: 20px;
   }
@@ -618,21 +628,21 @@ h5 {
   .container {
     padding: 10px;
   }
-  
+
   h3 {
     font-size: 26px;
     margin-bottom: 15px;
   }
-  
+
   h5 {
     font-size: 19px;
     margin-bottom: 12px;
   }
-  
+
   .part-images {
     margin: 20px 0;
   }
-  
+
   .d-flex.justify-content-center {
     margin: 20px 0;
   }

@@ -40,7 +40,7 @@
             <div class="part-img-box">
               <img v-if="imgLH && !imgErrLH" :src="imgLH" alt="LH" class="part-img" @error="imgErrLH = true" />
               <div v-else class="part-img-fallback">
-                 {{ headerLH.partName  }}
+                {{ headerLH.partName }}
               </div>
             </div>
 
@@ -48,7 +48,7 @@
             <div class="part-img-box">
               <img v-if="imgRH && !imgErrRH" :src="imgRH" alt="RH" class="part-img" @error="imgErrRH = true" />
               <div v-else class="part-img-fallback">
-                 {{ headerRH.partName  }}
+                {{ headerRH.partName }}
               </div>
             </div>
           </div>
@@ -253,7 +253,16 @@ export default {
 
   async mounted() {
     if (!this.params.station_id || !this.params.seq) {
-      this.$router.replace({ name: 'SelectProcess' })
+      this.$router.replace({ name: 'SelectProcess' }).catch(err => {
+        // Ignore the vuex err regarding  navigating to the page they are already on.
+        if (
+          err.name !== 'NavigationDuplicated' &&
+          !err.message.includes('Avoided redundant navigation to current location')
+        ) {
+          // But print any other errors to the console
+          logError(err);
+        }
+      });
       return
     }
 
@@ -329,7 +338,16 @@ export default {
         alert(`จำนวน Lot size ไม่ครบ!\nต้องการ: ${expectedLotSize} parts\nได้รับ: ${actualPartsCount} parts\nกรุณาเลือก Process ใหม่`);
 
         // กลับไปหน้า SelectProcess
-        this.$router.replace({ name: 'SelectProcess' });
+        this.$router.replace({ name: 'SelectProcess' }).catch(err => {
+          // Ignore the vuex err regarding  navigating to the page they are already on.
+          if (
+            err.name !== 'NavigationDuplicated' &&
+            !err.message.includes('Avoided redundant navigation to current location')
+          ) {
+            // But print any other errors to the console
+            logError(err);
+          }
+        });
         return false;
       }
 
@@ -337,7 +355,16 @@ export default {
       if (actualPartsCount === 0) {
         console.warn('No parts found');
         alert('ไม่พบข้อมูล Parts\nกรุณาเลือก Process และ Sequence Number ใหม่');
-        this.$router.replace({ name: 'SelectProcess' });
+        this.$router.replace({ name: 'SelectProcess' }).catch(err => {
+          // Ignore the vuex err regarding  navigating to the page they are already on.
+          if (
+            err.name !== 'NavigationDuplicated' &&
+            !err.message.includes('Avoided redundant navigation to current location')
+          ) {
+            // But print any other errors to the console
+            logError(err);
+          }
+        });
         return false;
       }
 
@@ -347,7 +374,16 @@ export default {
       // เช็ค params พื้นฐาน
       if (!this.params.station_id || !this.params.seq) {
         console.warn('Missing station_id or seq');
-        this.$router.replace({ name: 'SelectProcess' });
+        this.$router.replace({ name: 'SelectProcess' }).catch(err => {
+          // Ignore the vuex err regarding  navigating to the page they are already on.
+          if (
+            err.name !== 'NavigationDuplicated' &&
+            !err.message.includes('Avoided redundant navigation to current location')
+          ) {
+            // But print any other errors to the console
+            logError(err);
+          }
+        });
         return false;
       }
 
@@ -356,7 +392,16 @@ export default {
       if (!lotsize || lotsize <= 0) {
         console.warn('Invalid lotsize:', this.params.lotsize);
         alert('Lot Size ไม่ถูกต้อง\nกรุณาเลือก Process ใหม่');
-        this.$router.replace({ name: 'SelectProcess' });
+        this.$router.replace({ name: 'SelectProcess' }).catch(err => {
+          // Ignore the vuex err regarding  navigating to the page they are already on.
+          if (
+            err.name !== 'NavigationDuplicated' &&
+            !err.message.includes('Avoided redundant navigation to current location')
+          ) {
+            // But print any other errors to the console
+            logError(err);
+          }
+        });
         return false;
       }
 
@@ -385,12 +430,22 @@ export default {
       } catch (e) {
         this.parts = [];
         this.currentIndex = 0;
+        // this.validateLotSize()
         this.errorMsg = 'โหลด Part (allseq) ไม่สำเร็จ: ' + (e?.message || '');
         console.error('fetchParts error', e);
-
+        this.validateLotSize()
         // ถ้า error ก็ให้กลับไปหน้า select
         setTimeout(() => {
-          this.$router.replace({ name: 'SelectProcess' });
+          this.$router.replace({ name: 'SelectProcess' }).catch(err => {
+            // Ignore the vuex err regarding  navigating to the page they are already on.
+            if (
+              err.name !== 'NavigationDuplicated' &&
+              !err.message.includes('Avoided redundant navigation to current location')
+            ) {
+              // But print any other errors to the console
+              logError(err);
+            }
+          });
         }, 3000);
 
       } finally {
@@ -561,7 +616,7 @@ h5 {
   background: #fafafa;
   overflow: hidden;
   box-sizing: border-box;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .part-img {
@@ -597,7 +652,7 @@ h5 {
 
 .btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 .btn:active {
@@ -646,19 +701,19 @@ h5 {
     grid-template-columns: 1fr;
     gap: 15px;
   }
-  
+
   h3 {
     font-size: 24px;
   }
-  
+
   h5 {
     font-size: 18px;
   }
-  
+
   .row.mb-3 .col div {
     font-size: 15px;
   }
-  
+
   .btn {
     font-size: 16px !important;
     padding: 10px 20px !important;
@@ -667,11 +722,12 @@ h5 {
 }
 
 /* High DPI / Retina screens */
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+@media (-webkit-min-device-pixel-ratio: 2),
+(min-resolution: 192dpi) {
   .part-img-box {
     border-width: 1px;
   }
-  
+
   .btn {
     border-width: 1px !important;
   }
@@ -682,21 +738,21 @@ h5 {
   h3 {
     font-size: 32px;
   }
-  
+
   h5 {
     font-size: 22px;
   }
-  
+
   .row.mb-3 .col div {
     font-size: 18px;
   }
-  
+
   .btn {
     font-size: 20px !important;
     padding: 14px 28px !important;
     min-height: 55px;
   }
-  
+
   .part-img-fallback {
     font-size: 20px;
   }
@@ -707,21 +763,21 @@ h5 {
   .container {
     padding: 10px;
   }
-  
+
   h3 {
     font-size: 26px;
     margin-bottom: 15px;
   }
-  
+
   h5 {
     font-size: 19px;
     margin-bottom: 12px;
   }
-  
+
   .part-images {
     margin: 20px 0;
   }
-  
+
   .d-flex.justify-content-center {
     margin: 20px 0;
   }

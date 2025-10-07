@@ -342,7 +342,7 @@ export default {
           // sessionStorage.removeItem("checkPayload");
           // กลับไปหน้าเลือกใหม่
           this.$router.push({ name: 'SelectProcess' });
-        }, 1500);
+        }, 15000);
 
       } catch (error) {
         console.error('Error updating parts:', error);
@@ -415,7 +415,16 @@ export default {
         sessionStorage.setItem("checkPayload", JSON.stringify(payload));
 
         // กลับไป LayoutPage แต่จะเป็น role B  
-        this.$router.push({ name: 'SelectProcess' }); // หรือใช้ query parameter
+        this.$router.push({ name: 'SelectProcess' }).catch(err => {
+          // Ignore the vuex err regarding  navigating to the page they are already on.
+          if (
+            err.name !== 'NavigationDuplicated' &&
+            !err.message.includes('Avoided redundant navigation to current location')
+          ) {
+            // But print any other errors to the console
+            logError(err);
+          }
+        });
       } catch (error) {
         console.error('Error in :', error);
         // ถ้า error ก็ยังไปต่อ
@@ -424,7 +433,16 @@ export default {
         payload.completedRoles = ['A'];
         sessionStorage.setItem("checkProcess", JSON.stringify(this.$store.state.selection.process))
         sessionStorage.setItem("checkPayload", JSON.stringify(payload));
-        this.$router.push({ name: 'SelectProcess' });
+        this.$router.push({ name: 'SelectProcess' }).catch(err => {
+          // Ignore the vuex err regarding  navigating to the page they are already on.
+          if (
+            err.name !== 'NavigationDuplicated' &&
+            !err.message.includes('Avoided redundant navigation to current location')
+          ) {
+            // But print any other errors to the console
+            logError(err);
+          }
+        });
       }
     },
     resetGame() {
